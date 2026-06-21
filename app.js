@@ -422,19 +422,19 @@ app.get('/', (_, res) => {
         return;
       }
 
-      filesEl.innerHTML = files.map(file => `
-        <div class="file">
-          <div class="meta">
-            <div class="name" title="${file.originalName}">${file.originalName}</div>
-            <div class="sub">${bytes(file.size)} • ${timeAgo(file.createdAt)} • ${file.mimeType || 'unknown type'}</div>
-          </div>
-          <div class="actions">
-            <a class="btn secondary" href="/download/${file.id}">Download</a>
-            <button class="btn secondary" data-copy="${location.origin}/download/${file.id}">Copy link</button>
-            <button class="btn danger" data-delete="${file.id}">Delete</button>
-          </div>
-        </div>
-      `).join('');
+      filesEl.innerHTML = files.map(function(file) {
+        return '<div class="file">' +
+          '<div class="meta">' +
+            '<div class="name" title="' + file.originalName.replace(/"/g, '&quot;') + '">' + file.originalName + '</div>' +
+            '<div class="sub">' + bytes(file.size) + ' • ' + timeAgo(file.createdAt) + ' • ' + (file.mimeType || 'unknown type') + '</div>' +
+          '</div>' +
+          '<div class="actions">' +
+            '<a class="btn secondary" href="/download/' + file.id + '">Download</a>' +
+            '<button class="btn secondary" data-copy="' + location.origin + '/download/' + file.id + '">Copy link</button>' +
+            '<button class="btn danger" data-delete="' + file.id + '">Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
 
       document.querySelectorAll('[data-copy]').forEach(btn => {
         btn.addEventListener('click', async () => {
